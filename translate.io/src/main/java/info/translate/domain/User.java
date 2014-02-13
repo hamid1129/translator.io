@@ -7,7 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.AbstractAuditable;
@@ -32,11 +31,6 @@ public class User extends AbstractAuditable<User, Long> {
 
 	public User(String username) {
 		this.username = username;
-	}
-
-	@PrePersist
-	public void prePersist() {
-		System.out.println("PRE PERSIST");
 	}
 
 	public String getUsername() {
@@ -72,6 +66,52 @@ public class User extends AbstractAuditable<User, Long> {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((emailAddress == null) ? 0 : emailAddress.hashCode());
+		result = prime * result
+				+ ((password == null) ? 0 : password.hashCode());
+		result = prime * result
+				+ ((username == null) ? 0 : username.hashCode());
+		result = prime * result + ((words == null) ? 0 : words.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (emailAddress == null) {
+			if (other.emailAddress != null)
+				return false;
+		} else if (!emailAddress.equals(other.emailAddress))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		if (words == null) {
+			if (other.words != null)
+				return false;
+		} else if (!words.equals(other.words))
+			return false;
+		return true;
+	}
+
+	@Override
 	public String toString() {
 		return "User [getUsername()=" + getUsername() + ", getPassword()="
 				+ getPassword() + ", getEmailAddress()=" + getEmailAddress()
@@ -80,5 +120,15 @@ public class User extends AbstractAuditable<User, Long> {
 				+ getCreatedDate() + ", getLastModifiedBy()="
 				+ getLastModifiedBy() + ", getLastModifiedDate()="
 				+ getLastModifiedDate() + ", isNew()=" + isNew() + "]";
+	}
+
+	public static class UserBuilder {
+		public User build() {
+			return new User();
+		}
+
+		public static UserBuilder builder() {
+			return new UserBuilder();
+		}
 	}
 }
